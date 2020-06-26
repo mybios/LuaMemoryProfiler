@@ -9,6 +9,8 @@
 int LuaMemoryProfilerCppTest()
 {
 	lua_State *L = LuaNewState();
+	luaL_openlibs(L);
+
 	LuaMemoryProfiler &profiler = *GetMemoryProfilerFromState(L);
 
 	MemorySnapshot snapshot0;

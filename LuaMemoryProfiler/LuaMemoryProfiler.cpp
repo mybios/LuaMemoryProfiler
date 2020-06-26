@@ -178,7 +178,7 @@ size_t getGCObjectRawSize(GCObject* p)
 	case LUA_TTABLE:
 	{
 		Table* h = gco2t(p);
-		return (size_t)(sizenode(h) + h->sizearray);
+		return (size_t)(sizeof(Node) * (int)sizenode(h) + sizeof(TValue) * h->sizearray);
 	}
 	break;
 	}

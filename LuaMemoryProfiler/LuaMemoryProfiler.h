@@ -57,6 +57,7 @@ struct MemoryStat
 		this->sumDeallocBytes += other.sumDeallocBytes;
 		this->sumDeallocCount += other.sumDeallocCount;
 		this->gcObjectRawSize += other.gcObjectRawSize;
+		this->allocType |= other.allocType;
 		return *this;
 	}
 	MemoryStat& operator -= (const MemoryStat& other)
@@ -68,6 +69,7 @@ struct MemoryStat
 		this->sumDeallocBytes -= other.sumDeallocBytes;
 		this->sumDeallocCount -= other.sumDeallocCount;
 		this->gcObjectRawSize -= other.gcObjectRawSize;
+		this->allocType |= other.allocType;
 		return *this;
 	}
 	// 记录一次内存分配操作

@@ -13,6 +13,7 @@ extern "C"
 int LuaMemoryProfilerLuaTest()
 {
 	lua_State *L = LuaNewState();
+	luaL_openlibs(L);
 	luaL_requiref(L, "LuaMemoryProfiler", luaopen_LuaMemoryProfiler, 1);
 	lua_pop(L, 1);  // remove lib
 
@@ -24,7 +25,8 @@ local snapshot1 = LuaMemoryProfiler.capture()
 local function runLeak()
     for i = 1, 10 do
         -- 这里发生了内存泄露
-        g_leak[i] = {i}
+		local s = "leak string" .. tostring(i)
+        g_leak[i] = {s}
     end
 end
 runLeak()
