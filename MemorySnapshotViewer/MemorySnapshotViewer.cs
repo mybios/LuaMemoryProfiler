@@ -1,7 +1,3 @@
-/**
- * @author 李锦俊
- * @email mybios@qq.com
- */
 using System;
 using System.Drawing;
 using System.Collections;
@@ -47,16 +43,16 @@ namespace MemorySnapshotViewer
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        protected override void Dispose( bool disposing )
+        protected override void Dispose(bool disposing)
         {
-            if( disposing )
+            if (disposing)
             {
-                if(components != null)
+                if (components != null)
                 {
                     components.Dispose();
                 }
             }
-            base.Dispose( disposing );
+            base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
@@ -100,7 +96,7 @@ namespace MemorySnapshotViewer
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(291, 49);
             this.button1.TabIndex = 1;
-            this.button1.Text = "��Snapshot";
+            this.button1.Text = "打开Snapshot";
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
@@ -116,8 +112,8 @@ namespace MemorySnapshotViewer
             // 
             // treeListView1
             // 
-            this.treeListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.treeListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeListView1.CheckBoxes = true;
             this.treeListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -202,7 +198,7 @@ namespace MemorySnapshotViewer
         #endregion
 
         [STAThread]
-        static void Main() 
+        static void Main()
         {
             Application.Run(new MemorySnapshotViewer());
         }
@@ -230,12 +226,12 @@ namespace MemorySnapshotViewer
         private void TreeListView1_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             var col = treeListView1.Columns[lvwColumnSorter.SortColumn];
-            col.Text = col.Text.Substring(0, col.Text.Length - (lvwColumnSorter.Order == SortOrder.Ascending ? "��" : "��").Length);
+            col.Text = col.Text.Substring(0, col.Text.Length - (lvwColumnSorter.Order == SortOrder.Ascending ? "↑" : "↓").Length);
 
-            // ����������ǲ������ڵ�������.
+            // 检查点击的列是不是现在的排序列.
             if (e.Column == lvwColumnSorter.SortColumn)
             {
-                // �������ô��е����򷽷�.
+                // 重新设置此列的排序方法.
                 if (lvwColumnSorter.Order == SortOrder.Ascending)
                 {
                     lvwColumnSorter.Order = SortOrder.Descending;
@@ -247,28 +243,28 @@ namespace MemorySnapshotViewer
             }
             else
             {
-                // ���������У�Ĭ��Ϊ��������
+                // 设置排序列，默认为正向排序
                 lvwColumnSorter.SortColumn = e.Column;
                 lvwColumnSorter.Order = SortOrder.Ascending;
             }
 
-            // ���µ����򷽷���ListView����
+            // 用新的排序方法对ListView排序
             ResortNodes();
         }
 
 
         private void button1_Click(object sender, System.EventArgs e)
         {
-            //�½�һ���ļ��Ի���
+            //新建一个文件对话框
             OpenFileDialog pOpenFileDialog = new OpenFileDialog();
-            //���öԻ������
-            pOpenFileDialog.Title = "��Snapshot�ļ�";
-            //���ô��ļ�����
-            pOpenFileDialog.Filter = "Snapshot�ļ���*.xml��|*.xml";
-            //����ļ��Ƿ����
+            //设置对话框标题
+            pOpenFileDialog.Title = "打开Snapshot文件";
+            //设置打开文件类型
+            pOpenFileDialog.Filter = "Snapshot文件（*.xml）|*.xml";
+            //监测文件是否存在
             pOpenFileDialog.CheckFileExists = true;
             pOpenFileDialog.Multiselect = false;
-            //�ļ��򿪺�ִ�����³���
+            //文件打开后执行以下程序
             if (pOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
                 treeListView1.Items.Clear();
@@ -280,14 +276,14 @@ namespace MemorySnapshotViewer
         private void button2_Click(object sender, System.EventArgs e)
         {
             _allopen = !_allopen;
-            for(var index = 0; index < treeListView1.Items.Count; index ++)
+            for (var index = 0; index < treeListView1.Items.Count; index++)
             {
                 treeListView1.Items[index].Checked = _allopen;
             }
             _root.setOpenAll(_allopen);
         }
 
-    
+
 
         Node _root;
 
@@ -302,9 +298,9 @@ namespace MemorySnapshotViewer
                 this.Text = xml;
                 _allopen = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                MessageBox.Show("��Snapshot�ļ�[" + xml + "]ʧ�ܣ�" + e.ToString());
+                MessageBox.Show("打开Snapshot文件[" + xml + "]失败：" + e.ToString());
 
             }
         }
@@ -334,16 +330,16 @@ namespace MemorySnapshotViewer
             public int allocType;
             public int GetSubItem(int index)
             {
-                switch(index)
+                switch (index)
                 {
-                     case 1:return rawSize;
-                     case 2:return allocBytes;
-                     case 3:return allocCount;
-                     case 4:return sumAllocBytes;
-                     case 5:return sumAllocCount;
-                     case 6:return sumDeallocBytes;
-                     case 7:return sumDeallocCount;
-                     case 8:return allocType;
+                    case 1: return rawSize;
+                    case 2: return allocBytes;
+                    case 3: return allocCount;
+                    case 4: return sumAllocBytes;
+                    case 5: return sumAllocCount;
+                    case 6: return sumDeallocBytes;
+                    case 7: return sumDeallocCount;
+                    case 8: return allocType;
                 }
                 return 0;
             }
@@ -390,7 +386,7 @@ namespace MemorySnapshotViewer
 
         public void ResortNodes()
         {
-            treeListView1.Columns[lvwColumnSorter.SortColumn].Text += lvwColumnSorter.Order == SortOrder.Ascending ? "��" : "��";
+            treeListView1.Columns[lvwColumnSorter.SortColumn].Text += lvwColumnSorter.Order == SortOrder.Ascending ? "↑" : "↓";
 
             treeListView1.BeginUpdate();
             isUpdating = true;
@@ -426,7 +422,7 @@ namespace MemorySnapshotViewer
             }
             return node;
         }
-           
+
         public int PopulateTree(Node node, ListView.ListViewItemCollection items, int index)
         {
             ListViewItem item = new ListViewItem();
@@ -460,11 +456,11 @@ namespace MemorySnapshotViewer
             Node node = (Node)item.Tag;
 
             bool isParent = false;
-            for(Node p = node.parent; p != null; p = p.parent)
+            for (Node p = node.parent; p != null; p = p.parent)
             {
                 if (p == parent) isParent = true;
             }
-            if(isParent)
+            if (isParent)
             {
                 treeListView1.Items.Remove(item);
                 return true;
