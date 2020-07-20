@@ -1,5 +1,6 @@
 ﻿#include "LuaMemoryProfiler.h"
 #include <iostream>
+#include <algorithm>
 extern "C"
 {
 #include "ltable.h"
@@ -30,6 +31,7 @@ const MemoryStat& LuaMemoryProfiler::getGlobalMemoryStates()const
 {
 	return _globalMemoryStates;
 }
+#define DEFAULT_MEMORY_STAT_POOL_SIZE 64 * 1024
 
 // 从内存池中分配出MemoryStat
 MemoryStat* LuaMemoryProfiler::allocMemoryStat(const char* stackString, size_t stackStringSize)
@@ -38,15 +40,19 @@ MemoryStat* LuaMemoryProfiler::allocMemoryStat(const char* stackString, size_t s
 	if (iter == _memoryStates.end())
 	{
 		MemoryStatPool* pool = _memoryStatBuffer.back();
-		size_t size = sizeof(MemoryStat) + stackStringSize;
-		if (MEMORY_STAT_POOL_SIZE - pool->offset < size)
+		size_t size = sizeof(MemoryStat) + stackStringSize + 1;
+		if (pool->size - pool->offset < size)
 		{
-			_memoryStatBuffer.push_back(new MemoryStatPool());
-			pool = _memoryStatBuffer.back();
+			// 如果有超大的stackStringSize，则至少分配这么多
+			size_t buffSize = std::max<size_t>(size, DEFAULT_MEMORY_STAT_POOL_SIZE);
+			pool = (MemoryStatPool*)malloc(sizeof(MemoryStatPool) + buffSize);
+			pool->offset = 0;
+			pool->size = buffSize;
+			_memoryStatBuffer.push_back(pool);
 		}
 		MemoryStat* stat = (MemoryStat*)(pool->buff + pool->offset);
 		pool->offset += size;
-		memcpy(stat->stackString, stackString, stackStringSize);
+		memcpy(stat->stackString, stackString, stackStringSize + 1);
 		iter = _memoryStates.insert(std::make_pair((const char*)stat->stackString, stat)).first;
 	}
 

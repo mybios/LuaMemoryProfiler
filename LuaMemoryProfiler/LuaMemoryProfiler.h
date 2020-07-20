@@ -105,13 +105,13 @@ struct MemorySnapshot
 
 class LuaMemoryProfiler
 {
-#define MEMORY_STAT_POOL_SIZE 64*1024
 	struct MemoryStatPool
 	{
 		// 当前用到哪个字节
 		size_t offset = 0;
+		size_t size = 0;
 		// 一次性分配这么大
-		uint8_t buff[(size_t)(MEMORY_STAT_POOL_SIZE / sizeof(MemoryStat)) * sizeof(MemoryStat)] = { 0 };
+		uint8_t buff[1] = { 0 };
 	};
 	template<typename T>
 	struct stack_string_equal_to
@@ -121,6 +121,9 @@ class LuaMemoryProfiler
 			return strcmp(_Left, _Right) == 0;
 		}
 	};
+
+	static const size_t _FNV_prime = 16777619U;
+
 	template<typename T>
 	struct stack_string_hash
 	{
@@ -130,7 +133,7 @@ class LuaMemoryProfiler
 			size_t _Val = 0;
 			for (size_t _Idx = 0; _Idx < len; ++_Idx) {
 				_Val ^= static_cast<size_t>(v[_Idx]);
-				_Val *= std::_FNV_prime;
+				_Val *= _FNV_prime;
 			}
 			return _Val;
 		}
